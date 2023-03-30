@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Современный учебник JavaScript, ДЗ</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css" type="text/css"/>
+</head>
+<body>
+  <div class="container">
+
+    <div class="chapter">
+      <div>
+        <h1>Классы</h1>
+      </div>
+      <div class="content">
+        <div class="block">
+          <p>
+            <b>Класс: базовый синтаксис 9.1</b>
+          </p>
+          <p>
+            <b>Класс Clock написан в функциональном стиле. Перепишите его, используя современный синтаксис классов. P.S. Часики тикают в консоли. Откройте её, чтобы посмотреть.</b>
+          </p>
+          <div class="clock__wrapper">
+            <div class="clock"></div>
+          </div>
+        </div>
+        <div class="block">
+          <p>
+            <b>Наследование классов, глава 9.2</b>
+          </p>
+          <p>
+            <b>В коде ниже класс Rabbit наследует Animal. К сожалению, объект класса Rabbit не создаётся. Что не так? Исправьте ошибку.</b></p></br>
+            <p>
+              class Animal {</br>
+                constructor(name) {</br>
+                  this.name = name;</br>
+                }</br>
+              }</br>
+              class Rabbit extends Animal {</br>
+                constructor(name) {</br>
+                  <s>this.name = name;</br></s>
+                  <b>Решение: super(name);</b></br>
+                  this.created = Date.now();</br>
+                }</br>
+              }</br></br>
+              let rabbit = new Rabbit("Белый кролик"); // Error: this is not defined</br>
+              alert(rabbit.name);
+            </p>
+          <p>
+            <b>У нас есть класс Clock. Сейчас он выводит время каждую секунду, cоздайте новый класс ExtendedClock, который будет наследоваться от Clock и добавьте параметр precision – количество миллисекунд между «тиками». Установите значение в 1000 (1 секунда) по умолчанию.</b>
+          </p>
+          <p>
+            class ExtendedClock extends Clock {</br>
+              constructor(options) {</br>
+                super(options);</br>
+                let { precision = 1000 } = options;</br>
+                this.precision = precision;</br>
+              }</br></br>
+            
+              start() {</br>
+                this.render();</br>
+                this.timer = setInterval(() => this.render(), this.precision);</br>
+              }</br>
+            };</br>
+
+            let lowResolutionClock = new ExtendedClock({</br>
+              template: 'h:m:s',</br>
+              precision: 10000</br>
+            });</br></br>
+          
+            lowResolutionClock.start();
+          </p>
+        </div>
+        <div class="block">
+          <p>
+            <b>Статические свойства и методы, глава 9.3</b>
+          </p>
+          <p>
+            <b>Как мы уже знаем, все объекты наследуют от Object.prototype и имеют доступ к «общим» методам объекта, например hasOwnProperty. Но что если мы явно напишем "class Rabbit extends Object" – тогда результат будет отличаться от обычного "class Rabbit"? В чем разница?</b>
+          </p>
+          <p>
+            Ниже пример кода с таким наследованием (почему он не работает? исправьте его):</br></br>
+
+            class Rabbit extends Object {</br>
+              constructor(name) {</br>
+                <b>Сюда нужно добавить - super();</b></br>
+                this.name = name;</br>
+              }</br>
+            }</br></br>
+            
+            let rabbit = new Rabbit("Зайчик");</br>
+            
+            console.log( rabbit.hasOwnProperty('name')); // Ошибка</br>
+          </p>
+          <p>
+            
+          </p>
+        </div>
+        <div class="block">
+          <p>
+            <b>Проверка класса: "instanceof", глава 9.6</b>
+          </p>
+          <p>
+            <b>Почему instanceof в примере ниже возвращает true? Мы же видим, что a не создан с помощью B().</b>
+          </p>
+          <p>
+            function A() {}</br>
+            function B() {}</br>
+            A.prototype = B.prototype = {};</br>
+            let a = new A();</br>
+            alert( a instanceof B ); // true
+          </p>
+          <p>На совпадения в прототипной цепочке проверяется только prototype, в данном примере a.__proto__ == B.prototype.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="chapter">
+      <div>
+        <h1>Обработка ошибок</h1>
+      </div>
+      <div class="content">
+        <div class="block">
+          <p>
+            <b>Обработка ошибок, "try..catch", глава 10.1</b>
+          </p>
+          <p>
+            <b>Сравните два фрагмента кода.</b>
+          </p>
+          <p>
+            <b>Первый использует finally для выполнения кода после try..catch:</b></br></br>
+            try {</br>
+              начать работу</br>
+              работать</br>
+            } catch (e) {</br>
+              обработать ошибку</br>
+            } finally {</br>
+              очистить рабочее пространство</br>
+            }
+          </p>
+          <p>
+            <b>Второй фрагмент просто ставит очистку после try..catch:</b></br></br>
+            try {</br>
+              начать работу</br>
+              работать</br>
+            } catch (e) {</br>
+              обработать ошибку</br>
+            }</br>
+            очистить рабочее пространство
+          </p>
+          <p>
+            <b>Нам определённо нужна очистка после работы, неважно возникли ошибки или нет. Есть ли здесь преимущество в использовании finally или оба фрагмента кода одинаковы? Если такое преимущество есть, то дайте пример, когда оно проявляется.</b>
+          </p>
+          <p>
+            Если секция finally есть, то она выполняется в любом случае:
+            <ul>
+              <li>после try, если не было ошибок,</li>
+              <li>после catch, если ошибки были.</li>
+            </ul>
+          </p>
+          <p>
+            const clear = () => {</br>
+              try {</br>
+                console.log('go');</br>
+                return "result";</br>
+              } catch (e) {</br>
+                console.log('error')</br>
+              } finally {</br>
+                console.log('clear!');</br>
+              }</br>
+            }</br></br>
+            
+            clear();
+          </p>
+        </div>
+        <div class="block">
+          <p>
+            <b>Пользовательские ошибки, расширение Error, глава 10.2</b>
+          </p>
+          <p>
+            <b>Создайте класс FormatError, который наследует от встроенного класса SyntaxError. Класс должен поддерживать свойства message, name и stack.</b>
+          </p>
+          <p>
+            class FormatError extends SyntaxError {</br>
+              constructor(message) {</br>
+                super(message);</br>
+                this.name = "FormatError";</br>
+              }</br>
+            }</br></br>
+            
+            let err = new FormatError("ошибка форматирования");</br>
+            
+            alert( err.message ); // ошибка форматирования</br>
+            alert( err.name ); // FormatError</br>
+            alert( err.stack ); // stack</br>
+            
+            alert( err instanceof SyntaxError ); // true</br>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="chapter">
+      <div>
+        <h1>Промисы, async/await</h1>
+      </div>
+      <div class="content">
+        <div class="block">
+          <p>
+            <b>Промисы, глава 11.2</b>
+          </p>
+          <p>
+            <b>Что выведет код ниже?</b>
+          </p>
+          <p>
+            let promise = new Promise(function(resolve, reject) {</br>
+              resolve(1);</br>
+              setTimeout(() => resolve(2), 1000);</br>
+            });</br></br>
+            promise.then(alert);
+          </p>
+          <button id="code1">Узнать ответ</button>
+          <p>
+            <b>Встроенная функция setTimeout использует колбэк-функции. Создайте альтернативу, использующую промисы. Функция delay(ms) должна возвращать промис, который перейдёт в состояние «выполнен» через ms миллисекунд, так чтобы мы могли добавить к нему .then:</b>
+          </p>
+          <p>
+            function delay(ms) {</br>
+              // ваш код</br>
+            }</br></br>
+            delay(3000).then(() => alert('выполнилось через 3 секунды'));
+          </p>
+          <button id="code2">Узнать ответ</button>
+          <p>
+            <b>Перепишите функцию showCircle, написанную в задании Анимация круга с помощью колбэка таким образом, чтобы она возвращала промис, вместо того чтобы принимать в аргументы функцию-callback.</b>
+          </p>
+          <p>
+            showCircle(150, 150, 100).then(div => {</br>
+              div.classList.add('message-ball');</br>
+              div.append("Hello, world!");</br>
+            });
+          </p>
+          <button id="code3">Узнать ответ</button>
+        </div>
+        <div class="block">
+          <p>
+            <b>Цепочка промисов, глава 11.3</b>
+          </p>
+          <p>
+            <b>Являются ли фрагменты кода ниже эквивалентными? Другими словами, ведут ли они себя одинаково во всех обстоятельствах, для всех переданных им обработчиков?</b>
+          </p>
+          <ol>
+            <li>promise.then(f1).catch(f2);</li>
+            <li>promise.then(f1, f2);</li>
+          </ol></br>
+          <p>При возникновении ошибки в первом примере она будет отловлена.</p>
+        </div>
+        <div class="block">
+          <p>
+            <b>Промисы: обработка ошибок, глава 11.4</b>
+          </p>
+          <p>
+            <b>Что вы думаете? Выполнится ли .catch? Поясните свой ответ.</b>
+          </p>
+          <p>
+            new Promise(function(resolve, reject) {</br>
+              setTimeout(() => {</br>
+                throw new Error("Whoops!");</br>
+              }, 1000);</br>
+            }).catch(alert);
+          </p>
+          <button id="code4">Узнать ответ</button>
+        </div>
+        <div class="block">
+          <p>
+            <b>Async/await, глава 11.8</b>
+          </p>
+          <p>
+            <b>Перепишите один из примеров раздела Цепочка промисов, используя async/await вместо .then/catch:</b>
+          </p>
+          <p>
+            function loadJson(url) {</br>
+              return fetch(url)</br>
+                .then(response => {</br>
+                  if (response.status == 200) {</br>
+                    return response.json();</br>
+                  } else {</br>
+                    throw new Error(response.status);</br>
+                  }</br>
+                })</br>
+            }</br></br>
+            loadJson('no-such-user.json')</br>
+              .catch(alert);
+          </p>
+          <p>
+            <b>Ответ:</br></br>
+              async function loadJson(url) {</br>
+              let response = await fetch(url);</br>
+            
+              if (response.status == 200) {</br>
+                let json = await response.json();</br>
+                return json;</br>
+              }</br></br>
+            
+              throw new Error(response.status);</br>
+            }
+            
+            loadJson('no-such-user.json')</br>
+              .catch(alert);</b></br>
+          </p>
+          <p>
+            <b>Ниже пример из раздела Цепочка промисов, перепишите его, используя async/await вместо .then/catch. В функции demoGithubUser замените рекурсию на цикл: используя async/await, сделать это будет просто.</b>
+          </p>
+          <p>
+            class HttpError extends Error {</br>
+              constructor(response) {</br>
+                super(`${response.status} for ${response.url}`);</br>
+                this.name = 'HttpError';</br>
+                this.response = response;</br>
+              }</br>
+            }</br></br>
+            
+            function loadJson(url) {</br>
+              return fetch(url)</br>
+                .then(response => {</br>
+                  if (response.status == 200) {</br>
+                    return response.json();</br>
+                  } else {</br>
+                    throw new HttpError(response);</br>
+                  }</br>
+                })</br>
+            }</br></br>
+            
+            // Запрашивать логин, пока github не вернёт существующего пользователя.</br>
+            function demoGithubUser() {</br>
+              let name = prompt("Введите логин?", "iliakan");</br>
+            
+              return loadJson(`https://api.github.com/users/${name}`)</br>
+                .then(user => {</br>
+                  alert(`Полное имя: ${user.name}.`);</br>
+                  return user;</br>
+                })</br>
+                .catch(err => {</br>
+                  if (err instanceof HttpError && err.response.status == 404) {</br>
+                    alert("Такого пользователя не существует, пожалуйста, повторите ввод.");</br>
+                    return demoGithubUser();</br>
+                  } else {</br>
+                    throw err;</br>
+                  }</br>
+                });</br>
+            }</br></br>
+            
+            demoGithubUser();
+          </p>
+          <p>
+            <b>Ответ:</br></br>
+              async function demoGithubUser() {</br>
+              let user;</br>
+              while (!user) {</br>
+              try {</br>
+              let name = prompt('Введите логин?', 'iliakan');</br>
+              user = await loadJson(`https://api.github.com/users/${name}`);</br>
+              await alert(`Полное имя: ${user.name}.`);</br>
+              return user;</br>
+              } catch (err) {</br>
+              if (err instanceof HttpError && err.response.</br>status == 404) {</br>
+              alert('Такого пользователя не существует, пожалуйста, повторите ввод.');</br>
+              } else {</br>
+              throw err;</br>
+              }</br>
+              }</br>
+              }</br>
+              }</b>
+          </p>
+          <p>
+            <b>Есть «обычная» функция. Как можно внутри неё получить результат выполнения async–функции?</b></br>
+            P.S. Технически задача очень простая, но этот вопрос часто задают разработчики, недавно познакомившиеся с async/await.
+          </p>
+          <p>
+            async function wait() {</br>
+              await new Promise(resolve => setTimeout(resolve, 1000));</br>
+              return 10;</br>
+            }</br></br>
+            <b> Ответ:</br></br>
+              function f() {</br>
+                // покажет 10 через 1 секунду</br>
+                wait().then(result => alert(result));</br>
+              }</br></br>
+              
+              f();
+            </b>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="chapter">
+      <div>
+        <h1>Генераторы, продвинутая итерация</h1>
+      </div>
+      <div class="content">
+        <div class="block">
+          <p>
+            <b>Генераторы, глава 12.1</b>
+          </p>
+          <p>
+            Есть много областей, где нам нужны случайные данные. Одной из них является тестирование. Нам могут понадобиться случайные данные: текст, числа и т.д., чтобы хорошо всё проверить. В JavaScript мы можем использовать Math.random(). Но если что-то пойдёт не так, то нам нужно будет перезапустить тест, используя те же самые данные. Для этого используются так называемые «сеяные псевдослучайные генераторы». Они получают «зерно», как первое значение, и затем генерируют следующее, используя формулу. Так что одно и то же зерно даёт одинаковую последовательность, и, следовательно, весь поток легко воспроизводим. Нам нужно только запомнить зерно, чтобы воспроизвести последовательность. Пример такой формулы, которая генерирует более-менее равномерно распределённые значения:</br></br>
+
+            next = previous * 16807 % 2147483647</br></br>
+
+            Если мы используем 1 как зерно, то значения будут:
+            <ol>
+              <li>16807</li>
+              <li>282475249</li>
+              <li>1622650073</li>
+              <li>…и так далее…</li>
+            </ol>
+          </p>
+          <p>
+            Задачей является создать функцию-генератор pseudoRandom(seed), которая получает seed и создаёт генератор с указанной формулой.
+            Пример использования:</br></br>
+
+            let generator = pseudoRandom(1);</br>
+
+            alert(generator.next().value); // 16807</br>
+            alert(generator.next().value); // 282475249</br>
+            alert(generator.next().value); // 1622650073
+          </p>
+          <button id="code5">Узнать ответ</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="/9_1/task1.js"></script>
+  <script src="/11_2/task_1.js"></script>
+  <script src="/11_2/task_2.js"></script>
+  <script src="/11_2/task_3.js"></script>
+  <script src="/11_4/task_1.js"></script>
+  <script src="/12_1/task-1.js"></script>
+</body>
+</html>
